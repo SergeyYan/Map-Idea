@@ -2,18 +2,31 @@ import json
 import os
 import tempfile
 import threading
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from codex_api import router as codex_router, close_connection
 
 ROOT = Path(__file__).parent
 DATA = ROOT / 'data'
 DATA.mkdir(exist_ok=True)
 LOCK = threading.Lock()
-app = FastAPI(title='InkMap')
+
+
+@asynccontextmanager
+async def lifespan(app):
+    try:
+        yield
+    finally:
+        close_connection()
+
+
+app = FastAPI(title='InkMap', lifespan=lifespan)
+app.include_router(codex_router)
 
 
 class SaveRequest(BaseModel):

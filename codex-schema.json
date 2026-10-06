@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "idea",
+              "todo",
+              "doing",
+              "done"
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "note",
+          "stage",
+          "tags",
+          "status"
+        ]
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "b": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "important",
+              "high"
+            ]
+          }
+        },
+        "required": [
+          "a",
+          "b",
+          "priority"
+        ]
+      }
+    }
+  },
+  "required": [
+    "summary",
+    "nodes",
+    "edges"
+  ]
+}
