@@ -46,6 +46,21 @@ if errorlevel 1 (
     goto :fail
 )
 
+REM Resolve Codex before starting Uvicorn; reuse the backend resolver.
+"%VENV_PY%" -c "from CodexClient import CodexClient; print(CodexClient.executable())" >"%LOG_DIR%\codex.path" 2>"%LOG_DIR%\codex.err.log"
+set "INKMAP_CODEX_EXE="
+for /f "usebackq delims=" %%C in ("%LOG_DIR%\codex.path") do set "INKMAP_CODEX_EXE=%%C"
+if defined INKMAP_CODEX_EXE (
+    if exist "%INKMAP_CODEX_EXE%" (
+        echo [Codex] "%INKMAP_CODEX_EXE%"
+    ) else (
+        echo [WARNING] Invalid INKMAP_CODEX_EXE. See "%LOG_DIR%\codex.err.log"
+        set "INKMAP_CODEX_EXE="
+    )
+) else (
+    echo [WARNING] Codex unavailable. Board will work; sending ideas requires Codex.
+)
+
 REM Если порт уже слушается, второй uvicorn не запускаем.
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$c = New-Object Net.Sockets.TcpClient; try { $c.Connect('127.0.0.1',8000); exit 0 } catch { exit 1 } finally { $c.Dispose() }" >nul 2>&1
 if errorlevel 1 (
@@ -74,35 +89,32 @@ if errorlevel 1 (
 )
 
 echo [5/5] Настройка MCP для Codex...
-where codex >nul 2>&1
-if errorlevel 1 (
-    echo [WARNING] Команда codex не найдена в PATH.
-    echo Сервер запущен, но MCP inkmap не зарегистрирован.
-    echo После установки/добавления Codex CLI в PATH запустите этот файл снова.
+if not defined INKMAP_CODEX_EXE (
+    echo [WARNING] Codex unavailable; MCP registration skipped.
     goto :success
 )
 
 REM Повторный запуск должен быть безопасным: обновляем существующую запись inkmap.
-codex mcp get inkmap >nul 2>&1
+call "%INKMAP_CODEX_EXE%" mcp get inkmap >nul 2>&1
 if not errorlevel 1 (
-    codex mcp remove inkmap >nul 2>&1
+    call "%INKMAP_CODEX_EXE%" mcp remove inkmap >nul 2>&1
     if errorlevel 1 (
         echo [ERROR] Не удалось удалить старую запись MCP inkmap.
         goto :fail
     )
 )
 
-codex mcp add inkmap --env INKMAP_URL=http://127.0.0.1:8000 -- "%VENV_PY%" "%MCP_SCRIPT%"
+call "%INKMAP_CODEX_EXE%" mcp add inkmap --env INKMAP_URL=http://127.0.0.1:8000 -- "%VENV_PY%" "%MCP_SCRIPT%"
 if errorlevel 1 (
     echo [ERROR] Не удалось добавить MCP inkmap.
-    echo Для диагностики выполните: codex mcp add --help
+    echo Для диагностики выполните: call "%INKMAP_CODEX_EXE%" mcp add --help
     goto :fail
 )
 
 echo.
-codex mcp list
+call "%INKMAP_CODEX_EXE%" mcp list
 if errorlevel 1 (
-    echo [WARNING] MCP добавлен, но codex mcp list вернул ошибку.
+    echo [WARNING] MCP добавлен, но call "%INKMAP_CODEX_EXE%" mcp list вернул ошибку.
 )
 
 :success

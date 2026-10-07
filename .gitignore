@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+data/
+tests/artifacts/
+
+.git/
+.inkmap_logs/
+*.log
+*.zip

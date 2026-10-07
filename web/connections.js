@@ -1,3 +1,4 @@
+import { obstacleRoute, roundedRoute } from './routing.js';
 export const priorities = { normal: 'Обычный', important: 'Важный', high: 'Высокий' };
 export const directions = { forward: 'A → B · основная → подидея', backward: 'B → A · основная → подидея', both: 'A ↔ B · взаимная связь', none: 'A — B · без направления' };
 
@@ -34,41 +35,40 @@ function boundary(node, size, toward) {
     return {x: cx + ux * (distance + 6), y: cy + uy * (distance + 6)};
 }
 
-export function connectionPath(a, b, sizeA = {width:240,height:90}, sizeB = {width:240,height:90}, lane = 0) {
-    const centerA = {x:a.x+sizeA.width/2, y:a.y+sizeA.height/2};
-    const centerB = {x:b.x+sizeB.width/2, y:b.y+sizeB.height/2};
-    let start = boundary(a, sizeA, centerB), end = boundary(b, sizeB, centerA);
-    const dx = centerB.x - centerA.x, dy = centerB.y - centerA.y;
-    const distance = Math.hypot(dx, dy);
-    const nx = distance ? -dy / distance : 0, ny = distance ? dx / distance : 1;
-    if (lane) {
-        // Separate arrow tips as well as curves. Keep endpoints on each shape's boundary.
-        start = boundary(a, sizeA, {x:start.x+nx*lane, y:start.y+ny*lane});
-        end = boundary(b, sizeB, {x:end.x+nx*lane, y:end.y+ny*lane});
-    }
-    const horizontal = Math.abs(dx) >= Math.abs(dy);
-    const bend = Math.min(180, Math.max(30, Math.hypot(end.x-start.x, end.y-start.y)/2));
-    const x = horizontal ? Math.sign(dx || 1) * bend : 0, y = horizontal ? 0 : Math.sign(dy || 1) * bend;
-    return `M${start.x},${start.y} C${start.x+x+nx*lane},${start.y+y+ny*lane} ${end.x-x+nx*lane},${end.y-y+ny*lane} ${end.x},${end.y}`;
-}
-
 export function renderConnections(edges, nodes, selected, sizes = new Map()) {
     const markers = Object.keys(priorities).map(priority => `<marker id="arrow-${priority}" markerWidth="11" markerHeight="10" refX="10" refY="5" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path class="edge-arrow priority-${priority}" d="M0,0 L10,5 L0,10 Z"/></marker>`).join('');
     const byId = new Map(nodes.map(node => [node.id, node]));
-    const groups = new Map();
-    const pairKey = edge => JSON.stringify([edge.a, edge.b].sort());
-    edges.forEach((edge, index) => {
-        const key = pairKey(edge);
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(index);
+    const dimensions = node => sizes.get(node.id)||{width:node.width||240,height:node.height||(node.type==='shape'?180:90)};
+    const center = node => {const size=dimensions(node);return {x:node.x+size.width/2,y:node.y+size.height/2};};
+    const ports=new Map();const groups=new Map();
+    edges.forEach((edge,index)=>{
+        for(const [id,otherId,endpoint] of [[edge.a,edge.b,'a'],[edge.b,edge.a,'b']]){
+            const node=byId.get(id),other=byId.get(otherId);if(!node||!other)continue;
+            const c=center(node),o=center(other),dx=o.x-c.x,dy=o.y-c.y;
+            const side=Math.abs(dx)>=Math.abs(dy)?(dx>=0?'e':'w'):(dy>=0?'s':'n');
+            const groupKey=JSON.stringify([id,side]);if(!groups.has(groupKey))groups.set(groupKey,[]);
+            const port={index,endpoint,node,side,order:['e','w'].includes(side)?o.y:o.x};groups.get(groupKey).push(port);ports.set(`${index}-${endpoint}`,port);
+        }
     });
+    for(const group of groups.values()){
+        group.sort((a,b)=>a.order-b.order||a.index-b.index);
+        group.forEach((port,rank)=>{
+            const n=port.node,size=dimensions(n),t=.15+.7*(rank+1)/(group.length+1);
+            const toward={x:port.side==='w'?n.x:port.side==='e'?n.x+size.width:n.x+size.width*t,y:port.side==='n'?n.y:port.side==='s'?n.y+size.height:n.y+size.height*t};
+            port.point=boundary(n,size,toward);
+            port.stem={x:port.side==='w'?n.x-24:port.side==='e'?n.x+size.width+24:port.point.x,y:port.side==='n'?n.y-24:port.side==='s'?n.y+size.height+24:port.point.y};
+        });
+    }
+    const rectangles=nodes.map(node=>{const size=dimensions(node);return {left:node.x-24,right:node.x+size.width+24,top:node.y-24,bottom:node.y+size.height+24};});
     return `<defs>${markers}</defs>` + edges.map((edge, index) => {
         const a = byId.get(edge.a), b = byId.get(edge.b);
         if (!a || !b) return '';
         const priority = edgePriority(edge), direction = edgeDirection(edge);
-        const group = groups.get(pairKey(edge));
-        const lane = (group.indexOf(index) - (group.length - 1) / 2) * 36 * (edge.a < edge.b ? 1 : -1);
-        const path = connectionPath(a, b, sizes.get(a.id), sizes.get(b.id), lane);
+        const from=ports.get(`${index}-a`),to=ports.get(`${index}-b`);
+        const route=obstacleRoute(from.stem,to.stem,rectangles);
+        // Overlapping cards can leave no free route. Do not draw a line through them.
+        if(!route)return '';
+        const path=roundedRoute([from.point,...route,to.point]);
         const start = ['backward', 'both'].includes(direction) ? ` marker-start="url(#arrow-${priority})"` : '';
         const end = ['forward', 'both'].includes(direction) ? ` marker-end="url(#arrow-${priority})"` : '';
         return `<g><path class="edge priority-${priority} ${selected === index ? 'selected-edge' : ''}" d="${path}"${start}${end}/><path data-edge="${index}" class="edge-hit" d="${path}"/></g>`;

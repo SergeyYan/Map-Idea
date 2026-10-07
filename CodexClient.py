@@ -4,14 +4,31 @@ import queue
 import shutil
 import subprocess
 import threading
+from pathlib import Path
 
 
 class CodexClient:
     """JSON-lines app-server transport. No shell commands or token handling."""
-    def __init__(self):
+    @staticmethod
+    def executable():
+        override = os.environ.get('INKMAP_CODEX_EXE')
+        if override:
+            path = Path(override).expanduser()
+            if not path.is_file():
+                raise RuntimeError('INKMAP_CODEX_EXE указывает на отсутствующий файл: ' + str(path))
+            return str(path.resolve())
         executable = shutil.which('codex')
-        if not executable:
-            raise RuntimeError('Codex не найден. Установите Codex CLI и выполните codex login.')
+        if executable:
+            return executable
+        if os.name == 'nt' and os.environ.get('LOCALAPPDATA'):
+            directory = Path(os.environ['LOCALAPPDATA']) / 'OpenAI' / 'Codex' / 'bin'
+            candidates = [p for p in directory.glob('*/codex.exe') if p.is_file()]
+            if candidates:
+                return str(max(candidates, key=lambda p: p.stat().st_mtime))
+        raise RuntimeError('Codex не найден. Установите Codex CLI или задайте INKMAP_CODEX_EXE — полный путь к codex.exe. Затем перезапустите сервер InkMap.')
+
+    def __init__(self):
+        executable = self.executable()
         self.process = subprocess.Popen([executable, 'app-server', '--stdio'], stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                                         text=True, encoding='utf-8', errors='replace',

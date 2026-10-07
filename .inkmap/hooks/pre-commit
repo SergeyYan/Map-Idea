@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+if [ -n "${INKMAP_PYTHON:-}" ]; then py="$INKMAP_PYTHON"
+elif [ -x .venv/Scripts/python.exe ]; then py=.venv/Scripts/python.exe
+elif [ -x .venv/bin/python ]; then py=.venv/bin/python
+elif command -v python3 >/dev/null 2>&1; then py=python3
+else py=python
+fi
+"$py" .inkmap/sync_project.py --mode index
+git add -- .inkmap/project.json

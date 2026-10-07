@@ -1,3 +1,16 @@
+export async function fileMedia(file) {
+    if (file.size > 5 * 1024 * 1024) throw new Error('Максимум 5 МБ на вложение');
+    const kind = file.type.split('/')[0];
+    if (!['image', 'video', 'audio'].includes(kind)) throw new Error('Поддерживаются изображения, видео и аудио');
+    const data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+        reader.readAsDataURL(file);
+    });
+    return { name: file.name || 'Вложение', kind, data };
+}
+
 export function videoReference(value) {
     const source = value.trim();
     if (!source) throw new Error('Укажите URL видео или путь к файлу.');

@@ -4,7 +4,8 @@ import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
 
 async function loadModule(file) {
-    const source = await readFile(new URL(file, import.meta.url), 'utf8');
+    let source = await readFile(new URL(file, import.meta.url), 'utf8');
+    if(file.endsWith('connections.js')){const routing=await readFile(new URL('../web/routing.js',import.meta.url),'utf8');source=source.replace("'./routing.js'",JSON.stringify('data:text/javascript;base64,'+Buffer.from(routing).toString('base64')));}
     return import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 }
 const geometry = await loadModule('../web/geometry.js');
@@ -34,9 +35,10 @@ assert.match(connections.connectionsMarkdown([{a:'a',b:'b',priority:'high'}], 'a
 assert.match(connections.connectionsMarkdown([{a:'a',b:'b',direction:'backward'}], 'a', pair), /Подидея → Основная · Основная идея: Подидея/);
 // Endpoints stay outside each shape instead of hiding arrows under cards.
 for (const shape of ['ellipse','rectangle','rounded','diamond','triangle']) {
-    const path = connections.connectionPath({...pair[0],type:'shape',shape}, pair[1], {width:240,height:180}, {width:240,height:180});
+    const html = connections.renderConnections([{a:'a',b:'b'}], [{...pair[0],type:'shape',shape},pair[1]], null, new Map([['a',{width:240,height:180}],['b',{width:240,height:180}]]));
+    const path = html.match(/class="edge [^"]*" d="([^"]*)"/)[1];
     assert.ok(!/NaN|Infinity/.test(path));
-    const end = path.match(/ (-?[\d.]+),(-?[\d.]+)$/);
+    const end = path.match(/ L(-?[\d.]+),(-?[\d.]+)$/);
     assert.equal(Number(end[1]), 394);
     assert.equal(Number(end[2]), 90);
 }
@@ -82,6 +84,7 @@ function element(id) {
     return elements.get(id);
 }
 const context = vm.createContext({
+    initializeCodex:()=>{},
     ...media, ...geometry, ...connections, ...colors, ...resizing, structuredClone, console, crypto: webcrypto,
     document: { getElementById: element, activeElement: null, addEventListener() {},
         documentElement: {dataset:{}}, body: {classList:{toggle(){}}},
@@ -165,7 +168,7 @@ vm.runInContext('history()', context);
 assert.equal(vm.runInContext('doc.edges[0].b', context), 'b');
 // Wheel handler anchors the world position under the mouse cursor.
 vm.runInContext('view={x:20,y:30,z:1};', context);
-element('canvas').listeners.wheel({deltaY:-50,deltaMode:0,clientX:150,clientY:200,preventDefault(){}});
+element('canvas').listeners.wheel({target:background,deltaY:-50,deltaMode:0,clientX:150,clientY:200,preventDefault(){}});
 assert.equal(vm.runInContext('(150-view.x)/view.z', context), 130);
 assert.equal(vm.runInContext('(200-view.y)/view.z', context), 170);
 const countBeforeTheme = vm.runInContext('past.length', context);
@@ -175,7 +178,7 @@ assert.equal(context.localStorage['inkmap-theme'], 'dark');
 assert.equal(vm.runInContext('past.length', context), countBeforeTheme);
 element('theme').onclick();
 assert.equal(context.document.documentElement.dataset.theme, 'light');
-vm.runInContext("doc.edges=[{a:'a',b:'b'}];selected=null;selectedEdge=0;inspect();", context);
+vm.runInContext("doc.nodes=doc.nodes.filter(n=>n.id==='a'||n.id==='b');doc.nodes[1].x=450;doc.edges=[{a:'a',b:'b'}];selected=null;selectedEdge=0;inspect();", context);
 element('edgePriority').onchange({target:{value:'high'}});
 assert.match(element('lines').innerHTML, /edge priority-high selected-edge/);
 element('edgeDirection').onchange({target:{value:'backward'}});
