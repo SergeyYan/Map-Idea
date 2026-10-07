@@ -4,9 +4,9 @@
     "name": "IdeaMap"
   },
   "annotations": {},
-  "generatedAt": "2026-10-07T15:51:22.780538+00:00",
+  "generatedAt": "2026-10-07T15:56:49.691384+00:00",
   "source": {
-    "fingerprint": "612daf1167d844d974ea8b5811f1a253e7061613e98651a8afda12f59096027f",
+    "fingerprint": "feee1a56410a4ba69cf174679c92835776f95f95871689853eafdd0ba44e3382",
     "mode": "index",
     "files": {
       ".gitignore": "c2b88c35c3829b79615e3526683fc1d9ac14e005f93a63d0bf012f24c7de1c1b",
@@ -14,7 +14,7 @@
       "CODEX-INTEGRATION.md": "d1a9e213121f9ac338576d906c5e9b7a3bbf978c29248dbce9fd6d1d28842f76",
       "CodexClient.py": "e5d39f030527a553a3de35404d9aa1532df518a01d250dc7ae7d0b19a76ae0b8",
       "PORTABLE.md": "2f025190f00922bfbe940baf3d29954e0b7a18e267a1aec19bcdeae5b3093147",
-      "README.md": "0f094c46a537f9ece026c810e18e1bed8a3bf7953256b3eb1a4e6bf24a93f275",
+      "README.md": "a0b504053986fcb092cc38324beca6a3566ce0fd88c35ae69fe48e38ad858a17",
       "codex-schema.json": "ee8eb428f50589247686fda0133f981b198179289c0c3e561f07167d4019bd3e",
       "codex_api.py": "6c6732bba789b957bec9404ed3db68536095e78d72716d6e5f74f8063880859e",
       "inkmap_mcp.py": "1cf03afd3f6cee9e9f6bee599f79f19553ec2425db7b252ade994c979c9e0a4d",
@@ -122,7 +122,7 @@
     {
       "key": "file:README.md",
       "title": "README.md",
-      "note": "Существующий файл: README.md\nЛокальное приложение для идей: свободный холст, связи, заметки с тремя уровнями раскрытия, фигуры, рисование, медиа, задачи и Roadmap.",
+      "note": "Существующий файл: README.md\nЛокальная доска для идей и проектов: заметки, связи, фотографии, скриншоты, видео, аудио, голосовые записи, рисунки и задачи на свободном холсте. Работает в браузере; карта сохраняется на вашем компьютере.",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""
