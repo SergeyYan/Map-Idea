@@ -23,6 +23,6 @@ export function strokeTouches(stroke, from, to, radius) {
 }
 
 export function zoomAt(view, point, zoom) {
-    const z = Math.max(0.3, Math.min(2, zoom));
+    const z = Math.max(0.05, Math.min(2, zoom));
     return { x: point.x - (point.x - view.x) * z / view.z, y: point.y - (point.y - view.y) * z / view.z, z };
 }

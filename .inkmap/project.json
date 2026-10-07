@@ -4,9 +4,9 @@
     "name": "IdeaMap"
   },
   "annotations": {},
-  "generatedAt": "2026-10-07T15:14:22.751017+00:00",
+  "generatedAt": "2026-10-07T15:51:22.780538+00:00",
   "source": {
-    "fingerprint": "68df96a2b99743a83af57f1f8bead0c6e0f9881e3f2664205fac2d0ba71b9301",
+    "fingerprint": "612daf1167d844d974ea8b5811f1a253e7061613e98651a8afda12f59096027f",
     "mode": "index",
     "files": {
       ".gitignore": "c2b88c35c3829b79615e3526683fc1d9ac14e005f93a63d0bf012f24c7de1c1b",
@@ -14,13 +14,13 @@
       "CODEX-INTEGRATION.md": "d1a9e213121f9ac338576d906c5e9b7a3bbf978c29248dbce9fd6d1d28842f76",
       "CodexClient.py": "e5d39f030527a553a3de35404d9aa1532df518a01d250dc7ae7d0b19a76ae0b8",
       "PORTABLE.md": "2f025190f00922bfbe940baf3d29954e0b7a18e267a1aec19bcdeae5b3093147",
-      "README.md": "735b3dd58e54b158c7185d288af27806e9146093189814d24c356caa592ad418",
+      "README.md": "0f094c46a537f9ece026c810e18e1bed8a3bf7953256b3eb1a4e6bf24a93f275",
       "codex-schema.json": "ee8eb428f50589247686fda0133f981b198179289c0c3e561f07167d4019bd3e",
       "codex_api.py": "6c6732bba789b957bec9404ed3db68536095e78d72716d6e5f74f8063880859e",
       "inkmap_mcp.py": "1cf03afd3f6cee9e9f6bee599f79f19553ec2425db7b252ade994c979c9e0a4d",
       "project_map.py": "431e970b4e7d53bedf0ba4cc8ab31330e7f8e971811a7b2e6046834a7305bd2b",
       "requirements.txt": "ed58f33ba0120a0986bdabd19a6be0c75ece9f7187abae199fadc122177a4879",
-      "server.py": "16217189da2582a4bd7c8c36b6726a37e84bc6d8c862ea73dacf9302d31ca7e7",
+      "server.py": "40aee824c6b96a40b595102bbd951b864c65c7f601a4eaaf255cb368449bb48a",
       "server_control.ps1": "28a37f0bca04be395f9068bbd2518c2f2a5d36450196d7994269e7ea6203e080",
       "server_control_launcher.bat": "19f37a106a76d7d8c953281c3891a9d824c67432352a617ac780d6727e1295a9",
       "start_server.bat": "83d6a3d9358e856919c12efe5abfbaefc546b4b9744a56b6a3c51fd028573d9b",
@@ -30,17 +30,17 @@
       "tests/mcp_protocol.py": "c10b591cef83c1c382b30525fe1ec13f0fde39d682681db8ebef05cc90a39814",
       "tests/project_map_test.py": "c383e0023246f6a89f5fb5a14670747bd40fe47c9e84191a731e3595d7cff3d8",
       "web/VoiceRecorder.js": "7b692d08bc1a469218fadc6dfde37edb2d0dcf501895ff72d747235a812d0aba",
-      "web/app.js": "3ddc4f75272310d74542171884396a00b1c726298756c0f5f3dfd849dd5420f0",
+      "web/app.js": "14ea33b375ad5fd93193b89acfb50e242f789ddcba56f87d4e34651e07534276",
       "web/codex.js": "2701711a0892a632b5bd75de6f55bc93cc068f60e4127699ee1f70e075a170fd",
       "web/colors.js": "514d3fef96bd862ff089175db1e12a4128ce7c9e39783bd81d25780b80e78530",
       "web/connections.js": "f4f5d129ab714ce19354a347c80f576c7d52b7542691533d74d28bd309abd8ae",
-      "web/geometry.js": "a85c1ce485bbefe2275e880e68df067d3c997828adc376bc1b753a087004314a",
+      "web/geometry.js": "33c986328f0877ea12857cc30897ed2288a462368cb52c4616d531e27c1fb7e7",
       "web/index.html": "5be6d0aa0b6fd17cccf5b8e0bda1c5b63d89e99bedcb1f913bfbf1c028957e50",
       "web/media.js": "9929bfa0340df7f69569a6a11ca80fba114b5600064d1454e5aedc2ca7884f1b",
       "web/proposals.js": "fe99c286eb6452c45f271de7ba1ed538bf93fcc0dde6cc4a2345d17606b3f6b0",
       "web/resize.js": "333b320cc32bcff85ec9ba2dceb23b1a6e0d09b01fce4223587c8d900d141ace",
       "web/routing.js": "5750d9190c65dd58ca7ce22b9556879b8dd1ef077ae3d1c2c7c9bf819379fd0f",
-      "web/style.css": "89fe3bf0d1cc955d80f8de78fe99891f02f813ed3b38ab3a265d3adb3f2f2c91",
+      "web/style.css": "0fd86a1dbe991ea2e9a3fead94dafe36ff45e764bdc13fb4105cf167095ad051",
       "web/theme.js": "620adc4ff008d764190fbfea980c3f7f702d94befb0710ec389d3eebf9af11f3",
       "ПЕРЕНОС.md": "33ee01bf19d0f154414fd7dea53520dc6f83d8d3963b086b493f06e355a1ff5d"
     }
@@ -170,7 +170,7 @@
     {
       "key": "file:server.py",
       "title": "server.py",
-      "note": "Существующий файл: server.py\nКлассы: SaveRequest\nФункции: lifespan, load, save, index",
+      "note": "Существующий файл: server.py\nКлассы: SaveRequest\nФункции: lifespan, fresh_interface, load, save, index",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""

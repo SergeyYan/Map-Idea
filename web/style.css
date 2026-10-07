@@ -30,3 +30,5 @@ body.erasing #canvas{cursor:crosshair}button[aria-pressed="true"]{background:var
 .node img{max-height:none;height:auto}
 
 .node .node-note{overflow-y:auto;overflow-x:hidden;overflow-wrap:anywhere;scrollbar-gutter:stable;overscroll-behavior:contain;touch-action:pan-y;cursor:text;user-select:text;-webkit-user-select:text}
+
+.selection-box{position:absolute;pointer-events:none;border:1px solid var(--selected);background:color-mix(in srgb,var(--selected) 15%,transparent);z-index:20}

@@ -29,6 +29,14 @@ app = FastAPI(title='InkMap', lifespan=lifespan)
 app.include_router(codex_router)
 
 
+@app.middleware('http')
+async def fresh_interface(request, call_next):
+    response = await call_next(request)
+    if request.url.path == '/' or request.url.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
 class SaveRequest(BaseModel):
     revision: int
     document: dict

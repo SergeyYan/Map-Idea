@@ -44,6 +44,7 @@ for (const shape of ['ellipse','rectangle','rounded','diamond','triangle']) {
 }
 assert.ok(geometry.strokeTouches([{x:0,y:0},{x:100,y:0}], {x:50,y:-50}, {x:50,y:50}, 2));
 assert.ok(!geometry.strokeTouches([{x:0,y:0},{x:100,y:0}], {x:50,y:30}, {x:80,y:30}, 2));
+assert.equal(geometry.zoomAt({x:0,y:0,z:1},{x:100,y:100},0.01).z,0.05);
 const zoomed = geometry.zoomAt({x:20,y:30,z:1}, {x:150,y:200}, 1.5);
 assert.equal((150-zoomed.x)/zoomed.z, 130);
 assert.equal((200-zoomed.y)/zoomed.z, 170);
@@ -137,9 +138,10 @@ vm.runInContext('history()', context);
 assert.equal(vm.runInContext('doc.strokes.length', context), 2);
 vm.runInContext('history(true)', context);
 assert.equal(vm.runInContext('doc.strokes.length', context), 1);
-// Right-button presses must not start drawing, dragging or erasing.
-element('canvas').onpointerdown({button:2,target:background});
-assert.equal(vm.runInContext('gesture', context), null);
+// Right-button presses pan without drawing or erasing.
+element('canvas').onpointerdown({button:2,target:background,clientX:0,clientY:0,preventDefault(){}});
+assert.equal(vm.runInContext('gesture.kind', context), 'pan');
+vm.runInContext('end()',context);
 vm.runInContext("setMode('select');add('shape',{x:50,y:50},'diamond');", context);
 assert.match(element('nodes').innerHTML, /shape-diamond/);
 element('shapeKind').onchange({target:{value:'triangle'}});
