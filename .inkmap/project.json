@@ -4,9 +4,9 @@
     "name": "IdeaMap"
   },
   "annotations": {},
-  "generatedAt": "2026-10-07T15:56:49.691384+00:00",
+  "generatedAt": "2026-11-02T15:11:54.096895+00:00",
   "source": {
-    "fingerprint": "feee1a56410a4ba69cf174679c92835776f95f95871689853eafdd0ba44e3382",
+    "fingerprint": "b7e0203ad09fe3e80e3c76458e652adac5a4bb4c45930107c256df237d3f8ad7",
     "mode": "index",
     "files": {
       ".gitignore": "c2b88c35c3829b79615e3526683fc1d9ac14e005f93a63d0bf012f24c7de1c1b",
@@ -14,9 +14,10 @@
       "CODEX-INTEGRATION.md": "d1a9e213121f9ac338576d906c5e9b7a3bbf978c29248dbce9fd6d1d28842f76",
       "CodexClient.py": "e5d39f030527a553a3de35404d9aa1532df518a01d250dc7ae7d0b19a76ae0b8",
       "PORTABLE.md": "2f025190f00922bfbe940baf3d29954e0b7a18e267a1aec19bcdeae5b3093147",
-      "README.md": "a0b504053986fcb092cc38324beca6a3566ce0fd88c35ae69fe48e38ad858a17",
+      "README.md": "232ecf43e8bc1b28689fd35197652a5d347cb745103f1fa7ec0979f69e409771",
       "codex-schema.json": "ee8eb428f50589247686fda0133f981b198179289c0c3e561f07167d4019bd3e",
       "codex_api.py": "6c6732bba789b957bec9404ed3db68536095e78d72716d6e5f74f8063880859e",
+      "docs/WEB-VERSION.md": "dcc510029c18f1cd5113201524a2b899f37795ba37b269eaeadd417d251c3d82",
       "inkmap_mcp.py": "1cf03afd3f6cee9e9f6bee599f79f19553ec2425db7b252ade994c979c9e0a4d",
       "project_map.py": "431e970b4e7d53bedf0ba4cc8ab31330e7f8e971811a7b2e6046834a7305bd2b",
       "requirements.txt": "ed58f33ba0120a0986bdabd19a6be0c75ece9f7187abae199fadc122177a4879",
@@ -45,12 +46,12 @@
       "ПЕРЕНОС.md": "33ee01bf19d0f154414fd7dea53520dc6f83d8d3963b086b493f06e355a1ff5d"
     }
   },
-  "summary": "Структура проекта: 34 файлов, 38 узлов. Описания можно дополнить вручную или через Codex.",
+  "summary": "Структура проекта: 35 файлов, 40 узлов. Описания можно дополнить вручную или через Codex.",
   "nodes": [
     {
       "key": "project",
       "title": "IdeaMap",
-      "note": "Карта структуры проекта. Файлов: 34.\nСтатический анализ без запуска кода и тестов.",
+      "note": "Карта структуры проекта. Файлов: 35.\nСтатический анализ без запуска кода и тестов.",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""
@@ -59,6 +60,14 @@
       "key": "group:Корень",
       "title": "Корень",
       "note": "Файлы:\n.gitignore\nAGENTS.md\nCODEX-INTEGRATION.md\nCodexClient.py\nPORTABLE.md\nREADME.md\ncodex-schema.json\ncodex_api.py\ninkmap_mcp.py\nproject_map.py\nrequirements.txt\nserver.py\nserver_control.ps1\nserver_control_launcher.bat\nstart_server.bat\nstop_server.bat\nПЕРЕНОС.md",
+      "status": "idea",
+      "stage": "Архитектура",
+      "tags": ""
+    },
+    {
+      "key": "group:docs",
+      "title": "docs",
+      "note": "Файлы:\ndocs/WEB-VERSION.md",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""
@@ -122,7 +131,7 @@
     {
       "key": "file:README.md",
       "title": "README.md",
-      "note": "Существующий файл: README.md\nЛокальная доска для идей и проектов: заметки, связи, фотографии, скриншоты, видео, аудио, голосовые записи, рисунки и задачи на свободном холсте. Работает в браузере; карта сохраняется на вашем компьютере.",
+      "note": "Существующий файл: README.md\n**Заметки, связи, скриншоты, видео, голосовые записи и задачи на свободном холсте.** InkMap работает на Windows 10/11 x64 как самостоятельная переносимая программа: без браузера, Python, локального сервера и отдельной установки .NET. Доска доступна без интернета, данные хранятся на вашем компьютере.",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""
@@ -139,6 +148,14 @@
       "key": "file:codex_api.py",
       "title": "codex_api.py",
       "note": "Существующий файл: codex_api.py\nФункции: local_request, connection, close_connection, context, validate_proposal, project, proposal, threads, results, dismiss, send, run",
+      "status": "idea",
+      "stage": "Архитектура",
+      "tags": ""
+    },
+    {
+      "key": "file:docs/WEB-VERSION.md",
+      "title": "WEB-VERSION.md",
+      "note": "Существующий файл: docs/WEB-VERSION.md",
       "status": "idea",
       "stage": "Архитектура",
       "tags": ""
@@ -360,6 +377,11 @@
     },
     {
       "a": "project",
+      "b": "group:docs",
+      "priority": "important"
+    },
+    {
+      "a": "project",
       "b": "group:tests",
       "priority": "important"
     },
@@ -406,6 +428,11 @@
     {
       "a": "group:Корень",
       "b": "file:codex_api.py",
+      "priority": "normal"
+    },
+    {
+      "a": "group:docs",
+      "b": "file:docs/WEB-VERSION.md",
       "priority": "normal"
     },
     {
